@@ -1,10 +1,14 @@
 const dotenv = require("dotenv");
 dotenv.config();
-const mongoose = require("mongoose");
+
 const express = require("express");
+const mongoose = require("mongoose");
+
 const app = express();
 app.use(express.json());
-const sauce = require("./models/sauce");
+
+const sauce = require("./models/models_sauce");
+const user = require("./models/models_user");
 
 mongoose.connect("mongodb+srv://MaevaPrecourt:Maeva1996@piiquante.x6lztnj.mongodb.net/?retryWrites=true&w=majority",
 {
