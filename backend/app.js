@@ -1,5 +1,14 @@
+const mongoose = require("mongoose");
 const express = require("express");
 const app = express();
+app.use(express.json());
+
+mongoose.connect("mongodb+srv://MaevaPrecourt:Maeva1996@piiquante.x6lztnj.mongodb.net/?retryWrites=true&w=majority",
+{useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log("Connexion à MongoDB réussie !"))
+.catch(() => console.log("Connexion à MongoDB échouée !"));
 
 app.use(function(request, response, next){
     response.setHeader("Access-Control-Allow-Origin", "*");
