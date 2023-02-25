@@ -1,5 +1,9 @@
+require("dotenv").config;
+
 const express = require("express");
 const mongoose = require("mongoose");
+const path = require("path");
+const sauceRoutes = require("./routes/sauce");
 const userRoutes = require("./routes/user");
 
 mongoose.connect("mongodb+srv://MaevaPrecourt:Maeva1996@piiquante.x6lztnj.mongodb.net/?retryWrites=true&w=majority",
@@ -20,6 +24,8 @@ app.use(function(request, response, next){
 });
 
 app.use(express.json());
+app.use("api/sauces", sauceRoutes);
 app.use("/api/auth", userRoutes);
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 module.exports = app;
