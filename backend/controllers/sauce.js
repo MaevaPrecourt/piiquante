@@ -4,11 +4,15 @@ const Sauce = require("../models/Sauce");
 exports.postSauces = (request, response, next) => {
     const sauceObject = JSON.parse(request.body.sauce);
     delete sauceObject._id;
-    delete sauceObject._userId;
-    const sauce = new Sauce ({
+    //delete sauceObject._userId;
+    const sauce = new Sauce({
         ...sauceObject,
-        _userId: request.auth.userId,
-        imageUrl: `${request.protocol}://${request.get("host")}/images/${request.file.filename}`
+        //_userId: request.auth.userId,
+        imageUrl: `${request.protocol}://${request.get("host")}/images/${request.file.filename}`,
+        likes: 0,
+        dislikes: 0,
+        usersLiked: [],
+        usersDisliked: []
     });
     sauce.save()
     .then(() => response.status(201).json({message: "Sauce enregistrée."}))
@@ -22,21 +26,8 @@ exports.getSauces = (request, response, next) => {
 };
 
 exports.modifyOneSauce = (request, response, next) => {
-    const sauceObject = req.file ? {
-        ...JSON.parse(request.body.sauce),
-        imageUrl: `${request.protocol}://${request.get("host")}/images/${request.file.filename}`
-    } : {...request.body};
-    delete sauceObject._userId;
-    Sauce.findOne({_id: request.params.id})
-    .then((sauce) => {
-        if(sauce.userId != request.auth.userId){
-            response.status(401).json({message: "Non autorisé."});
-        }else{
-            Sauce.updateOne({_id: request.params.id}, {...sauceObject, _id: request.params.id})
-            .then(() => response.status(200).json({message: "Sauce modifiée."}))
-            .catch(error => response.status(401).json({error}));
-        }
-    })
+    Sauce.updateOne({_id: request.params.id}, {...request.body, _id: request.params.id})
+    .then(() => response.status(200).json({message: "Sauce modifiée."}))
     .catch(error => response.status(400).json({error}));
 };
 
