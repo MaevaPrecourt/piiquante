@@ -9,7 +9,7 @@ module.exports = (request, response, next) => {
             userId: userId
         };
         if(request.body.userId && request.body.userId != userId){
-            throw "Non autorisé.";
+            throw new Error("Non autorisé.");
         }else{
             next();
         }

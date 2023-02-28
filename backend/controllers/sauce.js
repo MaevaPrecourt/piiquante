@@ -4,10 +4,10 @@ const Sauce = require("../models/Sauce");
 exports.postSauces = (request, response, next) => {
     const sauceObject = JSON.parse(request.body.sauce);
     delete sauceObject._id;
-    //delete sauceObject._userId;
+    delete sauceObject._userId;
     const sauce = new Sauce({
         ...sauceObject,
-        //_userId: request.auth.userId,
+        _userId: request.auth.userId,
         imageUrl: `${request.protocol}://${request.get("host")}/images/${request.file.filename}`,
         likes: 0,
         dislikes: 0,

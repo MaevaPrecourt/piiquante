@@ -3,11 +3,10 @@ require("dotenv").config;
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
-
 const sauceRoutes = require("./routes/sauce");
 const userRoutes = require("./routes/user");
-
 const app = express();
+
 app.use(express.json());
 
 mongoose.connect("mongodb+srv://MaevaPrecourt:Maeva1996@piiquante.x6lztnj.mongodb.net/?retryWrites=true&w=majority",
