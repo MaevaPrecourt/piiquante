@@ -45,9 +45,7 @@ exports.deleteOneSauce = (request, response, next) => {
             });
         }
     })
-    .catch(error => {
-        response.status(500).json({error});
-    });
+    .catch(error => response.status(500).json({error}));
 };
 
 exports.getOneSauce = (request, response, next) => {
@@ -55,3 +53,63 @@ exports.getOneSauce = (request, response, next) => {
     .then(sauce => response.status(200).json(sauce))
     .catch(error => response.status(404).json({error}));
 };
+
+exports.likeDislike = (request, response, next) => {
+    const like = request.body.like;
+    const userId = request.body.userId;
+    const sauceId = request.params.id;
+    if(like === 1){
+        Sauce.updateOne(
+            {
+                _id: sauceId
+            },
+            {
+                $push: {usersLiked: userId},
+                $inc: {likes: +1}
+            }
+        )
+        .then(() => response.status(200).json({message: "+1 Like"}))
+        .catch((error) => response.status(400).json({error}))
+    }
+    if(like === -1){
+        Sauce.updateOne(
+            {_id: sauceId},
+            {
+                $push: {usersDisliked: userId},
+                $inc: {dislikes: +1}
+            }
+        )
+        .then(() => response.status(200).json({message: "+1 Dislike"}))
+        .catch(error => response.status(400).json({error}));
+    }
+    if(like === 0){
+        Sauce.findOne(
+            {_id: sauceId}
+        )
+        .then(sauce => {
+            if(sauce.usersLiked.includes(userId)){
+                Sauce.updateOne(
+                    {_id: sauceId},
+                    {
+                        $pull: {usersLiked: userId},
+                        $inc: {likes: -1}
+                    }
+                )
+                .then(() => response.status(200).json({message: "-1 Like"}))
+                .catch(error => response.status(400).json({error}));
+            }
+            if(sauce.usersDisliked.includes(userId)){
+                Sauce.updateOne(
+                    {_id: sauceId},
+                    {
+                        $pull: {usersDisliked: userId},
+                        $inc: {dislikes: -1}
+                    }
+                )
+                .then(() => response.status(200).json({message: "-1 Dislike"}))
+                .catch(error => response.status(400).json({error}));
+            }
+        })
+        .catch((error) => response.status(404).json({error}));
+    }
+}

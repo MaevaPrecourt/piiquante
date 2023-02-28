@@ -1,4 +1,3 @@
-//Paramétrage du serveur selon l'exemple du cours "Passez Au Full-Stack".
 const http = require("http");
 const app = require("./app");
 
