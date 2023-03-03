@@ -26,9 +26,16 @@ exports.getSauces = (request, response, next) => {
 };
 
 exports.modifyOneSauce = (request, response, next) => {
-    Sauce.updateOne({_id: request.params.id}, {...request.body, _id: request.params.id})
+    const sauceObject = request.file ?
+    {
+        ...JSON.parse(request.body.sauce),
+        imageUrl: `${request.protocol}://${request.get("host")}/images/${request.file.filename}`
+    }:{
+        ...request.body
+    }
+    Sauce.updateOne({_id: request.params.id}, {...sauceObject, _id: request.params.id})
     .then(() => response.status(200).json({message: "Sauce modifiée."}))
-    .catch(error => response.status(400).json({error}));
+    .catch(error => response.status(400).json({error}))
 };
 
 exports.deleteOneSauce = (request, response, next) => {
@@ -64,8 +71,8 @@ exports.likeDislike = (request, response, next) => {
                 _id: sauceId
             },
             {
-                $push: {usersLiked: userId},
-                $inc: {likes: +1}
+                $push:{usersLiked: userId},
+                $inc:{likes: +1}
             }
         )
         .then(() => response.status(200).json({message: "+1 Like"}))
@@ -75,8 +82,8 @@ exports.likeDislike = (request, response, next) => {
         Sauce.updateOne(
             {_id: sauceId},
             {
-                $push: {usersDisliked: userId},
-                $inc: {dislikes: +1}
+                $push:{usersDisliked: userId},
+                $inc:{dislikes: +1}
             }
         )
         .then(() => response.status(200).json({message: "+1 Dislike"}))
@@ -91,8 +98,8 @@ exports.likeDislike = (request, response, next) => {
                 Sauce.updateOne(
                     {_id: sauceId},
                     {
-                        $pull: {usersLiked: userId},
-                        $inc: {likes: -1}
+                        $pull:{usersLiked: userId},
+                        $inc:{likes: -1}
                     }
                 )
                 .then(() => response.status(200).json({message: "-1 Like"}))
@@ -102,8 +109,8 @@ exports.likeDislike = (request, response, next) => {
                 Sauce.updateOne(
                     {_id: sauceId},
                     {
-                        $pull: {usersDisliked: userId},
-                        $inc: {dislikes: -1}
+                        $pull:{usersDisliked: userId},
+                        $inc:{dislikes: -1}
                     }
                 )
                 .then(() => response.status(200).json({message: "-1 Dislike"}))
