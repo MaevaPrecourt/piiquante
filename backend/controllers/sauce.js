@@ -1,6 +1,11 @@
+//Import du File System.
 const fs = require("fs");
+
+//Import du modèle sauce.
 const Sauce = require("../models/Sauce");
 
+
+//Export de la requête d'envoi de la sauce.
 exports.postSauces = (request, response, next) => {
     const sauceObject = JSON.parse(request.body.sauce);
     delete sauceObject._id;
@@ -19,12 +24,14 @@ exports.postSauces = (request, response, next) => {
     .catch(error => response.status(400).json({error}));
 };
 
+//Export de la requête d'obtention d'un array des sauces enregistrées.
 exports.getSauces = (request, response, next) => {
     Sauce.find()
     .then(sauces => response.status(200).json(sauces))
     .catch(error => response.status(400).json({error}));
 };
 
+//Export de la requête de modification d'une seule sauce.
 exports.modifyOneSauce = (request, response, next) => {
     const sauceObject = request.file ?
     {
@@ -38,6 +45,7 @@ exports.modifyOneSauce = (request, response, next) => {
     .catch(error => response.status(400).json({error}))
 };
 
+//Export de la requête de suppression d'une seule sauce.
 exports.deleteOneSauce = (request, response, next) => {
     Sauce.findOne({_id: request.params.id})
     .then(sauce => {
@@ -55,12 +63,14 @@ exports.deleteOneSauce = (request, response, next) => {
     .catch(error => response.status(500).json({error}));
 };
 
+//Export de la requête d'obtention d'une seule sauce.
 exports.getOneSauce = (request, response, next) => {
     Sauce.findOne({_id: request.params.id})
     .then(sauce => response.status(200).json(sauce))
     .catch(error => response.status(404).json({error}));
 };
 
+//Export de la requête d'attribution de likes / dislikes.
 exports.likeDislike = (request, response, next) => {
     const like = request.body.like;
     const userId = request.body.userId;

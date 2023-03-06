@@ -1,7 +1,13 @@
+//Import de BCrypt.
 const bcrypt = require("bcrypt");
+
+//Import de JSON Web Token.
 const jwt = require("jsonwebtoken");
+
+//Import du modèle utilisateur.
 const User = require("../models/User");
 
+//Export de la requête d'inscription utilisateur.
 exports.signup = (request, response, next) => {
     bcrypt.hash(request.body.password, 10)
     .then(hash => {
@@ -16,6 +22,7 @@ exports.signup = (request, response, next) => {
     .catch(error => response.status(500).json({error}));
 };
 
+//Export de la requête de connexion utilisateur.
 exports.login = (request, response, next) => {
     User.findOne({email: request.body.email})
     .then(user => {

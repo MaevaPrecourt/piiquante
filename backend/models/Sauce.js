@@ -1,5 +1,7 @@
+//Import de Mongoose.
 const mongoose = require("mongoose");
 
+//Modèle sauce. Tableaux de chaînes pour les deux dernières propriétés.
 const sauceSchema = mongoose.Schema({
     userId: {type: String, required: true},
     name: {type: String, required: true},
@@ -14,4 +16,5 @@ const sauceSchema = mongoose.Schema({
     usersDisliked: {type: [String], required: true}
 });
 
+//Export du modèle sauce, pour un accès externe.
 module.exports = mongoose.model("Sauce", sauceSchema);
